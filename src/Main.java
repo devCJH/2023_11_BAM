@@ -7,9 +7,19 @@ public class Main {
 		
 		Scanner sc = new Scanner(System.in);
 		
-		String cmd = sc.nextLine();
-		
-		System.out.println("입력된 명령어) " + cmd);
+		while(true) {
+			System.out.printf("명령어) ");
+			String cmd = sc.nextLine().trim();
+			
+			if (cmd.length() == 0) {
+				System.out.println("명령어를 입력해주세요");
+				continue;
+			}
+			
+			if (cmd.equals("exit")) {
+				break;
+			}
+		}
 		
 		System.out.println("== 프로그램 끝 ==");
 		
