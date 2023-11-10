@@ -3,15 +3,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	
+	static List<Article> articles;
+	static int lastArticleId;
+	
+	static {
+		 articles = new ArrayList<>();
+		 lastArticleId = 0;
+	}
+	
 	public static void main(String[] args) {
 		
 		System.out.println("== 프로그램 시작 ==");
 		
+		makeTestData();
+		
 		Scanner sc = new Scanner(System.in);
-		
-		int lastArticleId = 0;
-		
-		List<Article> articles = new ArrayList<>();
 		
 		while(true) {
 			System.out.printf("명령어) ");
@@ -134,6 +141,13 @@ public class Main {
 		
 		sc.close();
 		
+	}
+
+	private static void makeTestData() {
+		articles.add(new Article(++lastArticleId, Util.getDateStr(), "제목1", "내용1"));
+		articles.add(new Article(++lastArticleId, Util.getDateStr(), "제목2", "내용2"));
+		articles.add(new Article(++lastArticleId, Util.getDateStr(), "제목3", "내용3"));
+		System.out.println("테스트용 게시물이 생성되었습니다");
 	}
 }
 
