@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Scanner;
 
 import example.dto.Article;
+import example.dto.Member;
 import example.util.Util;
 
 public class App {
 	
 	private List<Article> articles;
+	private List<Member> members;
 	private int lastArticleId;
+	private int lastMemberId;
 	
 	public App() {
 		 this.articles = new ArrayList<>();
+		 this.members = new ArrayList<>();
 		 this.lastArticleId = 0;
+		 this.lastMemberId = 0;
 	}
 	
 	public void run() {
@@ -36,8 +41,27 @@ public class App {
 			if (cmd.equals("exit")) {
 				break;
 			}
-
-			if (cmd.equals("article write")) {
+			
+			if (cmd.equals("member join")) {
+				
+				lastMemberId++;
+				
+				System.out.printf("아이디 : ");
+				String loginId = sc.nextLine();
+				System.out.printf("비밀번호 : ");
+				String loginPw = sc.nextLine();
+				System.out.printf("비밀번호 확인 : ");
+				String loginPwChk = sc.nextLine();
+				System.out.printf("이름 : ");
+				String name = sc.nextLine();
+				
+				Member member = new Member(lastMemberId, Util.getDateStr(), loginId, loginPw, name);
+				
+				this.members.add(member);
+				
+				System.out.printf("%s회원님이 가입되었습니다\n", name);
+				
+			} else if (cmd.equals("article write")) {
 
 				lastArticleId++;
 
