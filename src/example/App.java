@@ -46,14 +46,67 @@ public class App {
 				
 				lastMemberId++;
 				
-				System.out.printf("아이디 : ");
-				String loginId = sc.nextLine();
-				System.out.printf("비밀번호 : ");
-				String loginPw = sc.nextLine();
-				System.out.printf("비밀번호 확인 : ");
-				String loginPwChk = sc.nextLine();
-				System.out.printf("이름 : ");
-				String name = sc.nextLine();
+				String loginId = null;
+				
+				while (true) {
+					System.out.printf("아이디 : ");
+					loginId = sc.nextLine().trim();
+					
+					if (loginId.length() == 0) {
+						System.out.println("아이디는 필수 입력정보입니다");
+						continue;
+					}
+					
+					boolean loginIdDupChk = false;
+					
+					for (Member member : members) {
+						if (member.loginId.equals(loginId)) {
+							loginIdDupChk = true;
+						}
+					}
+					
+					if (loginIdDupChk) {
+						System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
+						continue;
+					}
+					
+					System.out.printf("%s은(는) 사용가능한 아이디입니다\n", loginId);
+					break;
+				}
+				
+				String loginPw = null;
+				
+				while (true) {
+					System.out.printf("비밀번호 : ");
+					loginPw = sc.nextLine().trim();
+					
+					if (loginPw.length() == 0) {
+						System.out.println("비밀번호는 필수 입력정보입니다");
+						continue;
+					}
+					
+					System.out.printf("비밀번호 확인 : ");
+					String loginPwChk = sc.nextLine().trim();
+					
+					if (loginPw.equals(loginPwChk) == false) {
+						System.out.println("비밀번호를 다시 입력해주세요");
+						continue;
+					}
+					break;
+				}
+				
+				String name = null;
+				
+				while (true) {
+					System.out.printf("이름 : ");
+					name = sc.nextLine().trim();
+					
+					if (name.length() == 0) {
+						System.out.println("이름은 필수 입력정보입니다");
+						continue;
+					}
+					break;
+				}
 				
 				Member member = new Member(lastMemberId, Util.getDateStr(), loginId, loginPw, name);
 				
