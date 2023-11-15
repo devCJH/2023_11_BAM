@@ -12,15 +12,39 @@ public class ArticleController {
 	private List<Article> articles;
 	private int lastArticleId;
 	private Scanner sc;
+	private String cmd;
 	
 	public ArticleController(Scanner sc) {
 		this.articles = new ArrayList<>();
 		this.lastArticleId = 0;
 		this.sc = sc;
+		this.cmd = null;
 	}
 	
-	public void doAction(String methodName) {
+	public void doAction(String cmd, String methodName) {
 		
+		this.cmd = cmd;
+		
+		switch (methodName) {
+		case "write":
+			doWrite();
+			break;
+		case "list":
+			showList();
+			break;
+		case "detail":
+			showDetail();
+			break;
+		case "modify":
+			doModify();
+			break;
+		case "delete":
+			doDelete();
+			break;
+		default:
+			System.out.println("존재하지 않는 명령어 입니다");
+			break;
+		}
 	}
 	
 	public void doWrite() {
@@ -38,7 +62,7 @@ public class ArticleController {
 		System.out.println(lastArticleId + "번 게시물이 생성되었습니다");
 	}
 	
-	public void showList(String cmd) {
+	public void showList() {
 		if (this.articles.size() == 0) {
 			System.out.println("게시물이 존재하지 않습니다");
 			return;
@@ -73,8 +97,14 @@ public class ArticleController {
 		}
 	}
 
-	public void showDetail(String cmd) {
+	public void showDetail() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
@@ -90,8 +120,14 @@ public class ArticleController {
 		System.out.printf("내용 : %s\n", foundArticle.body);
 	}
 	
-	public void doModify(String cmd) {
+	public void doModify() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
@@ -112,8 +148,14 @@ public class ArticleController {
 		System.out.printf("%d번 게시물을 수정했습니다\n", id);
 	}
 	
-	public void doDelete(String cmd) {
+	public void doDelete() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if (cmdBits.length == 2) {
+			System.out.println("명령어를 확인해주세요");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);

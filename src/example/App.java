@@ -32,13 +32,18 @@ public class App {
 			
 			String[] cmdBits = cmd.split(" ");
 			
+			if (cmdBits.length == 1) {
+				System.out.println("명령어를 확인해주세요");
+				continue;
+			}
+			
 			String controllerName = cmdBits[0];
 			String methodName = cmdBits[1];
 			
 			if (controllerName.equals("member")) {
-				memberController.doAction(methodName);
+				memberController.doAction(cmd, methodName);
 			} else if (controllerName.equals("article")) {
-				articleController.doAction(methodName);
+				articleController.doAction(cmd, methodName);
 			} else {
 				System.out.println("존재하지 않는 명령어입니다");
 			}
