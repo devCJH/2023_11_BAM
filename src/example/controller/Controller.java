@@ -6,4 +6,6 @@ public abstract class Controller {
 	public Scanner sc;
 	
 	public abstract void doAction(String cmd, String methodName);
+	
+	public abstract void makeTestData();
 }
