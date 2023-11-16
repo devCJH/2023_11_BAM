@@ -22,12 +22,24 @@ public class MemberController extends Controller {
 	public void doAction(String cmd, String methodName) {
 		switch (methodName) {
 		case "join":
+			if (isLogined()) {
+				System.out.println("로그아웃 후 이용해주세요");
+				break;
+			}
 			doJoin();
 			break;
 		case "login":
+			if (isLogined()) {
+				System.out.println("로그아웃 후 이용해주세요");
+				break;
+			}
 			doLogin();
 			break;
 		case "logout":
+			if (isLogined() == false) {
+				System.out.println("로그인 후 이용해주세요");
+				break;
+			}
 			doLogout();
 			break;
 		default:
@@ -38,11 +50,6 @@ public class MemberController extends Controller {
 
 	private void doJoin() {
 		
-		if (isLogined()) {
-			System.out.println("로그아웃 후 이용해주세요");
-			return;
-		}
-
 		lastMemberId++;
 		
 		String loginId = null;
