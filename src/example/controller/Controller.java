@@ -8,7 +8,7 @@ public abstract class Controller {
 	public Scanner sc;
 	public static Member loginedMember;
 	
-	public boolean isLogined() {
+	public static boolean isLogined() {
 		return loginedMember != null;
 	}
 	
