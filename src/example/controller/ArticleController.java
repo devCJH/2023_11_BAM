@@ -118,9 +118,11 @@ public class ArticleController extends Controller {
 			return;
 		}
 
+		String writerName = Container.memberDao.getWriterName(foundArticle.memberId);
+		
 		System.out.printf("번호 : %d\n", foundArticle.id);
 		System.out.printf("작성일 : %s\n", foundArticle.regDate);
-		System.out.printf("작성자 : %d\n", foundArticle.memberId);
+		System.out.printf("작성자 : %s\n", writerName);
 		System.out.printf("제목 : %s\n", foundArticle.title);
 		System.out.printf("내용 : %s\n", foundArticle.body);
 	}
