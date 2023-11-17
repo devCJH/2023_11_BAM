@@ -8,13 +8,11 @@ import example.util.Util;
 
 public class MemberController extends Controller {
 	
-	private int lastMemberId;
 	private MemberDao memberDao;
 	
 	public MemberController(Scanner sc) {
+		this.memberDao = new MemberDao();
 		this.sc = sc;
-		this.lastMemberId = 0;
-		this.memberDao = new MemberDao(); 
 	}
 	
 	@Override
@@ -37,7 +35,7 @@ public class MemberController extends Controller {
 
 	private void doJoin() {
 		
-		lastMemberId++;
+		int lastMemberId = this.memberDao.getLastMemberId();
 		
 		String loginId = null;
 		
@@ -161,9 +159,9 @@ public class MemberController extends Controller {
 	
 	@Override
 	public void makeTestData() {
-		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test1", "test1", "user1"));
-		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test2", "test2", "user2"));
-		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test3", "test3", "user3"));
+		this.memberDao.doJoin(new Member(this.memberDao.getLastMemberId(), Util.getDateStr(), "test1", "test1", "user1"));
+		this.memberDao.doJoin(new Member(this.memberDao.getLastMemberId(), Util.getDateStr(), "test2", "test2", "user2"));
+		this.memberDao.doJoin(new Member(this.memberDao.getLastMemberId(), Util.getDateStr(), "test3", "test3", "user3"));
 		System.out.println("테스트용 회원데이터가 생성되었습니다");
 	}
 }

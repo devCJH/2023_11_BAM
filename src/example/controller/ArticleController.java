@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import example.dao.ArticleDao;
 import example.dto.Article;
 import example.util.Util;
 
 public class ArticleController extends Controller {
 	
-	private List<Article> articles;
-	private int lastArticleId;
+	private ArticleDao articleDao;
 	private String cmd;
 	
 	public ArticleController(Scanner sc) {
-		this.articles = new ArrayList<>();
-		this.lastArticleId = 0;
+		this.articleDao = new ArticleDao();
 		this.sc = sc;
 		this.cmd = null;
 	}
@@ -49,8 +48,8 @@ public class ArticleController extends Controller {
 	
 	private void doWrite() {
 		
-		lastArticleId++;
-
+		int lastArticleId = this.articleDao.getLastId();
+		
 		System.out.printf("제목 : ");
 		String title = sc.nextLine();
 		System.out.printf("내용 : ");
@@ -58,20 +57,23 @@ public class ArticleController extends Controller {
 
 		Article article = new Article(lastArticleId, Util.getDateStr(), loginedMember.id, title, body);
 
-		this.articles.add(article);
+		this.articleDao.doWrite(article);
 
 		System.out.println(lastArticleId + "번 게시물이 생성되었습니다");
 	}
 	
 	private void showList() {
-		if (this.articles.size() == 0) {
+			
+		List<Article> articles = articleDao.getArticles();
+		
+		if (articles.size() == 0) {
 			System.out.println("게시물이 존재하지 않습니다");
 			return;
 		}
 		
 		String searchKeyword = cmd.substring("article list".length()).trim();
 
-		List<Article> printArticles = this.articles;
+		List<Article> printArticles = articles;
 		
 		if (searchKeyword.length() > 0) {
 			
@@ -108,7 +110,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = getArticleById(id);
+		Article foundArticle = this.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -138,7 +140,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = getArticleById(id);
+		Article foundArticle = this.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -155,8 +157,7 @@ public class ArticleController extends Controller {
 		System.out.printf("수정할 내용 : ");
 		String body = sc.nextLine();
 
-		foundArticle.title = title;
-		foundArticle.body = body;
+		articleDao.doModify(foundArticle, title, body);
 
 		System.out.printf("%d번 게시물을 수정했습니다\n", id);
 	}
@@ -177,7 +178,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = getArticleById(id);
+		Article foundArticle = this.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -189,24 +190,15 @@ public class ArticleController extends Controller {
 			return;
 		}
 		
-		this.articles.remove(foundArticle);
+		this.articleDao.doDelete(foundArticle);
 		System.out.printf("%d번 게시물을 삭제했습니다\n", id);
-	}
-	
-	private Article getArticleById(int id) {
-		for (Article article : this.articles) {
-			if (article.id == id) {
-				return article;
-			}
-		}
-		return null;
 	}
 	
 	@Override
 	public void makeTestData() {
-		this.articles.add(new Article(++lastArticleId, Util.getDateStr(), 2, "제목1", "내용1"));
-		this.articles.add(new Article(++lastArticleId, Util.getDateStr(), 3, "제목2", "내용2"));
-		this.articles.add(new Article(++lastArticleId, Util.getDateStr(), 2, "제목3", "내용3"));
+		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 2, "제목1", "내용1"));
+		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 3, "제목2", "내용2"));
+		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 2, "제목3", "내용3"));
 		System.out.println("테스트용 게시물이 생성되었습니다");
 	}
 }
