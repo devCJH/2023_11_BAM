@@ -1,21 +1,20 @@
 package example.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
+import example.dao.MemberDao;
 import example.dto.Member;
 import example.util.Util;
 
 public class MemberController extends Controller {
 	
-	private List<Member> members;
 	private int lastMemberId;
+	private MemberDao memberDao;
 	
 	public MemberController(Scanner sc) {
-		this.members = new ArrayList<>();
-		this.lastMemberId = 0;
 		this.sc = sc;
+		this.lastMemberId = 0;
+		this.memberDao = new MemberDao(); 
 	}
 	
 	@Override
@@ -51,7 +50,7 @@ public class MemberController extends Controller {
 				continue;
 			}
 			
-			if (isLoginIdDupChk(loginId)) {
+			if (this.memberDao.isLoginIdDupChk(loginId)) {
 				System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
 				continue;
 			}
@@ -96,7 +95,7 @@ public class MemberController extends Controller {
 		
 		Member member = new Member(lastMemberId, Util.getDateStr(), loginId, loginPw, name);
 		
-		this.members.add(member);
+		this.memberDao.doJoin(member);
 		
 		System.out.printf("%s회원님이 가입되었습니다\n", name);
 	}
@@ -132,7 +131,7 @@ public class MemberController extends Controller {
 			break;
 		}
 		
-		Member member = getMemberByLoginId(loginId);
+		Member member = this.memberDao.getMemberByLoginId(loginId);
 		
 		if (member == null) {
 			System.out.printf("%s(은)는 존재하지 않는 아이디입니다\n", loginId);
@@ -160,31 +159,11 @@ public class MemberController extends Controller {
 		System.out.println("로그아웃 되었습니다");
 	}
 	
-	private Member getMemberByLoginId(String loginId) {
-		for (Member member : members) {
-			if(member.loginId.equals(loginId)) {
-				return member;
-			}
-		}
-		return null;
-	}
-
-	private boolean isLoginIdDupChk(String loginId) {
-		
-		Member member = getMemberByLoginId(loginId);
-		
-		if (member != null) {
-			return true;
-		}
-		
-		return false;
-	}
-	
 	@Override
 	public void makeTestData() {
-		this.members.add(new Member(++lastMemberId, Util.getDateStr(), "test1", "test1", "user1"));
-		this.members.add(new Member(++lastMemberId, Util.getDateStr(), "test2", "test2", "user2"));
-		this.members.add(new Member(++lastMemberId, Util.getDateStr(), "test3", "test3", "user3"));
+		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test1", "test1", "user1"));
+		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test2", "test2", "user2"));
+		this.memberDao.doJoin(new Member(++lastMemberId, Util.getDateStr(), "test3", "test3", "user3"));
 		System.out.println("테스트용 회원데이터가 생성되었습니다");
 	}
 }

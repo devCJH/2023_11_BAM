@@ -56,7 +56,7 @@ public class App {
 				break;
 			case "member/join":
 			case "member/login":
-				if (Controller.isLogined() != false) {
+				if (Controller.isLogined()) {
 					System.out.println("로그아웃 후 이용해주세요");
 					continue;
 				}
