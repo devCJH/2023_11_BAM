@@ -3,6 +3,7 @@ package example.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import example.container.Container;
 import example.dto.Member;
 
 public class MemberDao extends Dao {
@@ -14,6 +15,10 @@ public class MemberDao extends Dao {
 
 	public int getLastMemberId() {
 		return this.lastId + 1;
+	}
+	
+	public List<Member> getMembers() {
+		return this.members;
 	}
 	
 	public void doJoin(Member member) {
@@ -36,5 +41,14 @@ public class MemberDao extends Dao {
 			return true;
 		}
 		return false;
+	}
+
+	public String getWriterName(int memberId) {
+		for (Member member : Container.memberDao.getMembers()) {
+			if (memberId == member.id) {
+				return member.name;
+			}
+		}
+		return null;
 	}
 }

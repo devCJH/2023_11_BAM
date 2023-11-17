@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import example.dao.ArticleDao;
+import example.container.Container;
 import example.dto.Article;
 import example.util.Util;
 
 public class ArticleController extends Controller {
 	
-	private ArticleDao articleDao;
 	private String cmd;
 	
 	public ArticleController(Scanner sc) {
-		this.articleDao = new ArticleDao();
 		this.sc = sc;
 		this.cmd = null;
 	}
@@ -48,7 +46,7 @@ public class ArticleController extends Controller {
 	
 	private void doWrite() {
 		
-		int lastArticleId = this.articleDao.getLastId();
+		int lastArticleId = Container.articleDao.getLastId();
 		
 		System.out.printf("제목 : ");
 		String title = sc.nextLine();
@@ -57,14 +55,14 @@ public class ArticleController extends Controller {
 
 		Article article = new Article(lastArticleId, Util.getDateStr(), loginedMember.id, title, body);
 
-		this.articleDao.doWrite(article);
+		Container.articleDao.doWrite(article);
 
 		System.out.println(lastArticleId + "번 게시물이 생성되었습니다");
 	}
 	
 	private void showList() {
 			
-		List<Article> articles = articleDao.getArticles();
+		List<Article> articles = Container.articleDao.getArticles();
 		
 		if (articles.size() == 0) {
 			System.out.println("게시물이 존재하지 않습니다");
@@ -96,7 +94,10 @@ public class ArticleController extends Controller {
 		System.out.println("번호	/		작성일		/	제목	/	작성자");
 		for (int i = printArticles.size() - 1; i >= 0; i--) {
 			Article article = printArticles.get(i);
-			System.out.printf("%d	/	%s	/	%s	/	%s\n", article.id, article.regDate, article.title, article.memberId);
+
+			String writerName = Container.memberDao.getWriterName(article.memberId);
+			
+			System.out.printf("%d	/	%s	/	%s	/	%s\n", article.id, article.regDate, article.title, writerName);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = this.articleDao.getArticleById(id);
+		Article foundArticle = Container.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -140,7 +141,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = this.articleDao.getArticleById(id);
+		Article foundArticle = Container.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -157,7 +158,7 @@ public class ArticleController extends Controller {
 		System.out.printf("수정할 내용 : ");
 		String body = sc.nextLine();
 
-		articleDao.doModify(foundArticle, title, body);
+		Container.articleDao.doModify(foundArticle, title, body);
 
 		System.out.printf("%d번 게시물을 수정했습니다\n", id);
 	}
@@ -178,7 +179,7 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmdBits[2]);
 
-		Article foundArticle = this.articleDao.getArticleById(id);
+		Article foundArticle = Container.articleDao.getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -190,15 +191,15 @@ public class ArticleController extends Controller {
 			return;
 		}
 		
-		this.articleDao.doDelete(foundArticle);
+		Container.articleDao.doDelete(foundArticle);
 		System.out.printf("%d번 게시물을 삭제했습니다\n", id);
 	}
 	
 	@Override
 	public void makeTestData() {
-		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 2, "제목1", "내용1"));
-		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 3, "제목2", "내용2"));
-		this.articleDao.doWrite(new Article(this.articleDao.getLastId(), Util.getDateStr(), 2, "제목3", "내용3"));
+		Container.articleDao.doWrite(new Article(Container.articleDao.getLastId(), Util.getDateStr(), 2, "제목1", "내용1"));
+		Container.articleDao.doWrite(new Article(Container.articleDao.getLastId(), Util.getDateStr(), 3, "제목2", "내용2"));
+		Container.articleDao.doWrite(new Article(Container.articleDao.getLastId(), Util.getDateStr(), 2, "제목3", "내용3"));
 		System.out.println("테스트용 게시물이 생성되었습니다");
 	}
 }
